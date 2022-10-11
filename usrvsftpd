@@ -1,0 +1,52 @@
+#!/bin/bash
+
+function checkdep {
+   if [[ $($1 -qa | grep $2) ]]
+	then echo "El paquete '$2' ya está instalado"
+	else
+	   case $1 in
+		rpm)
+		   dnf install $2 -y
+		   ;;
+		dpkg)
+		   apt-get install $2 -y
+		   ;;
+	   esac
+   fi
+}
+
+function checkvspam {
+
+echo "Habilitando autenticación PAM en /etc/pam.d/vsftpd con $1..."
+
+   if [[ -z "$(cat /etc/pam.d/vsftpd | grep "^$1")" ]]
+	then
+	  "$1 required pam_mysql.so user=vsftpd passwd=ftpdpass host=localhost db=vsftpd table=accounts usercolumn=username passwdcolumn=pass crypt=2" >> /etc/pam.d/vsftpd
+   fi
+}
+
+so=$(cat /etc/os-release | grep "^ID")
+
+case $so in
+   ID=fedora)
+	checkdep rpm vsftpd
+	checkdep rpm mariadb
+	checkdep rpm mariadb-pam
+	;;
+
+   ID=debian)
+	checkdep dpkg vsftpd
+	checkdep dpkg mariadb-server
+	checkdep dpkg libpam-mysql
+	;;
+esac
+
+if [[ $(cat /etc/passwd | grep "^vsftpd*") ]]
+   then echo "El usuario 'vsftpd' ya existe"
+   else
+	echo "Creando al usuario 'vsftpd'..."
+	useradd --home /home/vsftpd --gid nogroup -m --shell /bin/false vsftpd
+fi
+
+checkvspam auth
+checkvspam account
