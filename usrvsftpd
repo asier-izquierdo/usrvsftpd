@@ -16,7 +16,7 @@ function checkdep {
 }
 
 function vsftpdconf {
-   if [[ $(test -d $1/vsftpf.conf.backup) ]]
+   if [[ $(test -f $1/vsftpf.conf.backup) ]]
 	then
 	   echo "Realizando copia de seguridad para el fichero '$1/vsftpd.conf' en '$1/vsftpd.conf.backup' antes de modificarlo..."
 	   cp $1/vsftpd.conf $1/vsftpd.conf.backup
