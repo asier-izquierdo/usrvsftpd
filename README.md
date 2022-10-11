@@ -1,7 +1,8 @@
-Script de Bash para instalar y configurar vsftpd con MariaDB y crear usuarios para que accedan al sistema.
+Instala y configura vsftpd con MariaDB de manera que el servidor FTP permita inicios de sesión de usuarios almacenados en la base de datos
 
-NO hace las modificaciones iniciales del fichero 'vsftpd';
-NO crea la base de datos 'vsftpd';
-NO crea la tabla 'accounts' para la base de datos 'vsftpd';
+Mejoras por implementar:
+  NO hace las modificaciones iniciales del fichero 'vsftpd'
+  NO crea la base de datos 'vsftpd'
+  NO crea la tabla 'accounts' para la base de datos 'vsftpd'
 
-Compatible con Fedora y Debian/Ubuntu
+Compatible con Fedora y Debian
