@@ -92,12 +92,12 @@ if [[ $(test -d /var/lib/mysql/vsftpd) ]]
 	mysql -u root -e "CREATE database vsftpd;"
 	mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY 'vsftpd';"
 	mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON vsftpd.* TO 'vsftpd'@'localhost.localdomain' IDENTIFIED BY 'vsftpd';"
+fi
 
-   if [[ !$(test -f /var/lib/mysql/vsftpd/accounts.ibd) ]]
+if [[ !$(test -f /var/lib/mysql/vsftpd/accounts.ibd) ]]
 	then
 	   echo "Creando la tabla 'accounts' en la base de datos 'vsftpd'..."
 	   mysql -u root -e "CREATE TABLE 'accounts' ('id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'pass' VARCHAR(50) NOT NULL, UNIQUE ('username'));"
-   fi
 fi
 
 checkvspam auth
