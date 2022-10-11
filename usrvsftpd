@@ -89,10 +89,15 @@ if [[ $(test -d /var/lib/mysql/vsftpd) ]]
    then echo "La base de datos 'vsftpd' ya existe, saltando al siguiente paso"
    else
 	echo "Creando la base de datos 'vsfptd'..."
-	mysql -u root -e "CREATE database vsftpd;GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY 'vsftpd';GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON vsftpd.* TO 'vsftpd'@'localhost.localdomain' IDENTIFIED BY 'vsftpd';"
+	mysql -u root -e "CREATE database vsftpd;"
+	mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON vsftpd.* TO 'vsftpd'@'localhost' IDENTIFIED BY 'vsftpd';"
+	mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON vsftpd.* TO 'vsftpd'@'localhost.localdomain' IDENTIFIED BY 'vsftpd';"
 
-	echo "Creando la tabla 'accounts' en la base de datos 'vsftpd'..."
-	mysql -u root -e "CREATE TABLE 'accounts' ('id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'pass' VARCHAR(50) NOT NULL, UNIQUE ('username'));"
+   if [[ !$(test -f /var/lib/mysql/vsftpd/accounts.ibd) ]]
+	then
+	   echo "Creando la tabla 'accounts' en la base de datos 'vsftpd'..."
+	   mysql -u root -e "CREATE TABLE 'accounts' ('id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'pass' VARCHAR(50) NOT NULL, UNIQUE ('username'));"
+   fi
 fi
 
 checkvspam auth
