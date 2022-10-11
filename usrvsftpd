@@ -88,15 +88,15 @@ fi
 checkvspam auth
 checkvspam account
 
-echo "Reiniciando el servicio 'vsftpd' para aplicar los cambios..."
-systemctl restart vsftpd
-
 if [[ $(test -f /etc/ssl/mariadb.pem) ]]
    then echo "El certificado para realizar una conexión segura ya existe, saltando al siguiente paso"
    else
 	echo "Generando el certificado SSL 'mariadb.pem' con una clave RSA2048 y validez de 1 año..."
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout mariadb.pem -out mariadb.pem -days 365
 fi
+
+echo "Reiniciando el servicio 'vsftpd' para aplicar los cambios..."
+systemctl restart vsftpd
 
 read -p "¿Cómo se va a llamar el nuevo usuario? " usu
 read -p "¿Cuál será su contraseña para la base de datos? " usupass
