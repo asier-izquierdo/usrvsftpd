@@ -119,4 +119,4 @@ mysql -u root -e "INSERT into vsftpd.accounts (username, pass) VALUES ('${usu}',
 
 echo "¡Usuario creado! Hemos acabado."
 echo "Recuerda que tanto el usuario como la contraseña para acceder a la base de datos es 'vsftpd'"
-read -p "Pulse INTRO para terminar" p
+read -p "Pulse INTRO para terminar"
