@@ -30,8 +30,8 @@ function vsftpdconf {
     echo "nopriv_user=vsftpd" >> $1/vsftpd.conf
     echo "virtual_use_local_privs=YES" >> $1/vsftpd.conf
     echo "guest_enable=YES" >> $1/vsftpd.conf
-    echo "user_sub_token='$USER'" >> $1/vsftpd.conf
-    echo "local_root=/home/vsftpd/'$USER'" >> $1/vsftpd.conf
+    echo "user_sub_token=\$USER" >> $1/vsftpd.conf
+    echo "local_root=/home/vsftpd/\$USER" >> $1/vsftpd.conf
     echo "chroot_local_user=YES" >> $1/vsftpd.conf
     echo "guest_username=vsftpd" >> $1/vsftpd.conf
     echo "allow_writeable_chroot=YES" >> $1/vsftpd.conf
