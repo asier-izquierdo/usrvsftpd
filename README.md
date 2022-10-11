@@ -6,6 +6,5 @@ Instala y configura vsftpd con MariaDB de manera que el servidor FTP permita ini
 -------------------
 <b>Características pendientes de implementar</b><br>
   Creación de un certificado SSL e implementarlo en MariaDB para hacer conexiones cifradas
-  
 -------------------
 Compatible con Fedora y Debian
