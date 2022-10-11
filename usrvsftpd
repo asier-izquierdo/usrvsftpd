@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function checkdep {
+function checkdep { 
    if [[ $($1 -qa | grep $2) ]]
 	then echo "El paquete '$2' ya está instalado, saltando al siguiente paso"
 	else
@@ -97,7 +97,7 @@ fi
 if [[ !$(test -f /var/lib/mysql/vsftpd/accounts.ibd) ]]
 	then
 	   echo "Creando la tabla 'accounts' en la base de datos 'vsftpd'..."
-	   mysql -u root -e "CREATE TABLE 'accounts' ('id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 'username' VARCHAR(30) NOT NULL, 'pass' VARCHAR(50) NOT NULL, UNIQUE ('username'));"
+	   mysql -u root -e "CREATE TABLE vsftpd.accounts (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, username VARCHAR(30) NOT NULL, pass VARCHAR(50) NOT NULL, UNIQUE (username));"
 fi
 
 checkvspam auth
@@ -116,17 +116,8 @@ systemctl restart vsftpd
 read -p "¿Cómo se va a llamar el nuevo usuario? " usu
 read -p "¿Cuál será su contraseña para la base de datos? " usupass
 
-if [[ $(test -d /home/vsftpd) ]]
-   then echo "El directorio '/home/vsftpd' ya existe, saltando al siguiente paso"
-   else
-	echo "Creando el directorio '/home/vsftpd'..."
-	mkdir /home/vsftpd
-fi
-
 mkdir /home/vsftpd/$usu
 chown -R vsftpd /home/vsftpd/$usu
-
-read -p "Introduce tu contraseña 'root' para MariaDB " rootmdb
 
 echo "Insertando a '$usu' en la tabla 'accounts' para la base de datos 'vsftpd'..."
 
@@ -134,4 +125,4 @@ mysql -u root -e "INSERT into vsftpd.accounts (username, pass) VALUES ('${usu}',
 
 echo "¡Usuario creado! Hemos acabado."
 echo "Recuerda que tanto el usuario como la contraseña para acceder a la base de datos es 'vsftpd'"
-read
+read -p "Pulse INTRO para terminar" p
