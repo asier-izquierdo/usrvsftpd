@@ -6,5 +6,4 @@ Compatible con Fedora y Debian
 
 Descargar el script<br>
 Dar permisos de ejecución<br>
-Ejecutar como root o con 'sudo'
-    `sudo ./usrvsftpd`
+Ejecutar con:<br>`sudo ./usrvsftpd`
