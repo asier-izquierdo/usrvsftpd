@@ -15,8 +15,27 @@ function checkdep {
    fi
 }
 
-function checkvspam {
+function vsftpdconf {
+   echo "Realizando copia de seguridad para el fichero '$1/vsftpd.conf' en '$1/vsftpd.conf.backup' antes de modificarlo..."
+    cp $1/vsftpd.conf $1/vsftpd.conf.backup
 
+   echo "Modificando el fichero $1/vsftpd.conf..."
+    rm $1/vsftpd.conf
+    echo "listen=YES" > $1/vsftpd.conf
+    echo "anonymous_enable=NO" >> $1/vsftpd.conf
+    echo "local_enable=YES" >> $1/vsftpd.conf
+    echo "write_enable=YES" >> $1/vsftpd.conf
+    echo "nopriv_user=vsftpd" >> $1/vsftpd.conf
+    echo "virtual_use_local_privs=YES" >> $1/vsftpd.conf
+    echo "guest_enable=YES" >> $1/vsftpd.conf
+    echo "user_sub_token=$USER" >> $1/vsftpd.conf
+    echo "local_root=/home/vsftpd/$USER" >> $1/vsftpd.conf
+    echo "chroot_local_user=YES" >> $1/vsftpd.conf
+    echo "guest_username=vsftpd" >> $1/vsftpd.conf
+    echo "allow_writeable_chroot=YES" >> $1/vsftpd.conf
+}
+
+function checkvspam {
    if [[ -z "$(cat /etc/pam.d/vsftpd | grep "^$1")" ]]
 	then
 	  echo "Habilitando autenticación PAM en /etc/pam.d/vsftpd con $1..."
@@ -33,12 +52,18 @@ case $so in
 	checkdep rpm vsftpd
 	checkdep rpm mariadb
 	checkdep rpm mariadb-pam
+	systemctl start vsftpd
+        systemctl start mariadb
+	vsftpdconf /etc/vsftpd
 	;;
 
    ID=debian)
 	checkdep dpkg vsftpd
 	checkdep dpkg mariadb-server
 	checkdep dpkg libpam-mysql
+	systemctl start vsftpd
+	systemctl start mariadb-server
+	vsftpdconf /etc
 	;;
 esac
 
@@ -51,6 +76,9 @@ fi
 
 checkvspam auth
 checkvspam account
+
+echo "Reiniciando el servicio 'vsftpd' para aplicar los cambios..."
+systemctl restart vsftpd
 
 read -p "¿Cómo se va a llamar el nuevo usuario? " usu
 read -p "¿Cuál será su contraseña para la base de datos? " usupass
