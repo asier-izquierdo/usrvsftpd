@@ -16,7 +16,7 @@ function checkdep {
 }
 
 function vsftpdconf {
-   if [[ $(test -f $1/vsftpf.conf.backup) ]]
+   if [[ $(test -d $1/vsftpf.conf.backup) ]]
 	then
 	   echo "Realizando copia de seguridad para el fichero '$1/vsftpd.conf' en '$1/vsftpd.conf.backup' antes de modificarlo..."
 	   cp $1/vsftpd.conf $1/vsftpd.conf.backup
@@ -35,6 +35,16 @@ function vsftpdconf {
     echo "chroot_local_user=YES" >> $1/vsftpd.conf
     echo "guest_username=vsftpd" >> $1/vsftpd.conf
     echo "allow_writeable_chroot=YES" >> $1/vsftpd.conf
+    echo "rsa_cert_file=/etc/ssl/mariadb.pem" >> $1/vsftpd.conf
+    echo "rsa_private_key_file=/etc/ssl/mariadb.pem" >> $1/vsftpd.conf
+    echo "ssl_enable=YES" >> $1/vsftpd.conf
+    echo "ssl_ciphers=HIGH" >> $1/vsftpd.conf
+    echo "ssl_tlsv1=YES" >> $1/vsftpd.conf
+    echo "ssl_sslv2=NO" >> $1/vsftpd.conf
+    echo "ssl_sslv3=NO" >> $1/vsftpd.conf
+    echo "force_local_data_ssl=YES" >> $1/vsftpd.conf
+    echo "force_local_logins_ssl=YES " >> $1/vsftpd.conf
+
 }
 
 function checkvspam {
@@ -82,11 +92,18 @@ checkvspam account
 echo "Reiniciando el servicio 'vsftpd' para aplicar los cambios..."
 systemctl restart vsftpd
 
+if [[ $(test -f /etc/ssl/mariadb.pem) ]]
+   then echo "El certificado para realizar una conexión segura ya existe, saltando al siguiente paso"
+   else
+	echo "Generando el certificado SSL 'mariadb.pem' con una clave RSA2048 y validez de 1 año..."
+	openssl req -x509 -nodes -newkey rsa:2048 -keyout mariadb.pem -out mariadb.pem -days 365
+fi
+
 read -p "¿Cómo se va a llamar el nuevo usuario? " usu
 read -p "¿Cuál será su contraseña para la base de datos? " usupass
 
 if [[ $(test -d /home/vsftpd) ]]
-   then echo "El directorio '/home/vsftpd' ya existe, saltando al siguiente paso'"
+   then echo "El directorio '/home/vsftpd' ya existe, saltando al siguiente paso"
    else
 	echo "Creando el directorio '/home/vsftpd'..."
 	mkdir /home/vsftpd
