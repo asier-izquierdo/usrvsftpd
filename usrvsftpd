@@ -86,7 +86,7 @@ read -p "¿Cómo se va a llamar el nuevo usuario? " usu
 read -p "¿Cuál será su contraseña para la base de datos? " usupass
 
 if [[ $(test -d /home/vsftpd) ]]
-   then echo "El directorio '/home/vsftpd' ya exoste, saltando al siguiente paso'"
+   then echo "El directorio '/home/vsftpd' ya existe, saltando al siguiente paso'"
    else
 	echo "Creando el directorio '/home/vsftpd'..."
 	mkdir /home/vsftpd
