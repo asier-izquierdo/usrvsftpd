@@ -9,4 +9,4 @@ Instala y configura vsftpd con MariaDB de manera que el servidor FTP permita ini
 
 ---
 
->Compatible con Fedora y Debian
+Compatible con Fedora y Debian
