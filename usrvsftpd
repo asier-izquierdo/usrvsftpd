@@ -2,7 +2,7 @@
 
 function checkdep {
    if [[ $($1 -qa | grep $2) ]]
-	then echo "El paquete '$2' ya está instalado"
+	then echo "El paquete '$2' ya está instalado, saltando al siguiente paso"
 	else
 	   case $1 in
 		rpm)
@@ -17,11 +17,12 @@ function checkdep {
 
 function checkvspam {
 
-echo "Habilitando autenticación PAM en /etc/pam.d/vsftpd con $1..."
-
    if [[ -z "$(cat /etc/pam.d/vsftpd | grep "^$1")" ]]
 	then
+	  echo "Habilitando autenticación PAM en /etc/pam.d/vsftpd con $1..."
 	  "$1 required pam_mysql.so user=vsftpd passwd=ftpdpass host=localhost db=vsftpd table=accounts usercolumn=username passwdcolumn=pass crypt=2" >> /etc/pam.d/vsftpd
+
+	else echo "La utenticación para $1 ya está activada, saltando al siguiente paso"
    fi
 }
 
@@ -42,7 +43,7 @@ case $so in
 esac
 
 if [[ $(cat /etc/passwd | grep "^vsftpd*") ]]
-   then echo "El usuario 'vsftpd' ya existe"
+   then echo "El usuario 'vsftpd' ya existe, saltando al siguiente paso"
    else
 	echo "Creando al usuario 'vsftpd'..."
 	useradd --home /home/vsftpd --gid nogroup -m --shell /bin/false vsftpd
@@ -50,3 +51,25 @@ fi
 
 checkvspam auth
 checkvspam account
+
+read -p "¿Cómo se va a llamar el nuevo usuario? " usu
+read -p "¿Cuál será su contraseña para la base de datos? " usupass
+
+if [[ $(test -d /home/vsftpd) ]]
+   then echo "El directorio '/home/vsftpd' ya exoste, saltando al siguiente paso'"
+   else
+	echo "Creando el directorio '/home/vsftpd'..."
+	mkdir /home/vsftpd
+fi
+
+mkdir /home/vsftpd/$usu
+chown /home/vsftpd/$usu:nogroup $usu
+
+read -p "Introduce tu contraseña 'root' para MariaDB " rootmdb
+
+echo "Insertando a '$usu' en la tabla 'accounts' para la base de datos 'vsftpd'..."
+
+mysql -u root -e "INSERT into vsftpd.accounts (username, pass) VALUES ('${usu}', PASSWORD('${usupass}'));"
+
+echo "¡Usuario creado! Hemos acabado"
+read
