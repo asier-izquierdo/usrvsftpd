@@ -93,7 +93,7 @@ if [[ $(test -d /home/vsftpd) ]]
 fi
 
 mkdir /home/vsftpd/$usu
-chown -R /home/vsftpd/$usu $usu
+chown -R vsftpd /home/vsftpd/$usu
 
 read -p "Introduce tu contraseña 'root' para MariaDB " rootmdb
 
