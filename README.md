@@ -7,7 +7,7 @@ Instala y configura vsftpd con MariaDB de manera que el servidor FTP permita ini
 2.Dar permisos de ejecución<br>
 3.Ejecutar con: `sudo ./usrvsftpd`
 
-Para una explicación del código, consultar la [wiki]. (https://github.com/asier-izquierdo/usrvsftpd/wiki)
+Para una explicación del código, consultar la [wiki.](https://github.com/asier-izquierdo/usrvsftpd/wiki)
 
 ---
 
