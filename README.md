@@ -1,4 +1,4 @@
-Instala y configura vsftpd con MariaDB de manera que el servidor FTP permita inicios de sesión de usuarios almacenados en la base de datos
+Instala y configura vsftpd con MariaDB de manera que el servidor FTP permita inicios de sesión de usuarios almacenados en la base de datos, así como conexiones cifradas con SSL
 
 
 <b>Instrucciones de uso</b>
