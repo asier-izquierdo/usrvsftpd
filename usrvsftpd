@@ -112,7 +112,7 @@ read -p "¿Cómo se va a llamar el nuevo usuario? " usu
 read -p "¿Cuál será su contraseña para la base de datos? " usupass
 
 mkdir /home/vsftpd/$usu
-chown -R vsftpd /home/vsftpd/$usu
+chown -R vsftpd:nogroup /home/vsftpd/$usu
 
 echo "Insertando a '$usu' en la tabla 'accounts' para la base de datos 'vsftpd'..."
 
