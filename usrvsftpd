@@ -41,7 +41,7 @@ function vsftpdconf {
 }
 
 function checkvspam {
-   if [[ -z "$(cat /etc/pam.d/vsftpd | grep "^$1")" ]]
+   if [[ $(test -z "$(cat /etc/pam.d/vsftpd | grep "^$1")") ]]
 	then
 	  echo "Habilitando autenticación PAM en /etc/pam.d/vsftpd con $1..."
 	  "$1 required pam_mysql.so user=vsftpd passwd=vsftpd host=localhost db=vsftpd table=accounts usercolumn=username passwdcolumn=pass crypt=2" >> /etc/pam.d/vsftpd
